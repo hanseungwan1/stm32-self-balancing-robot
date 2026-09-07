@@ -1,0 +1,10 @@
+11:22:13 **** Incremental Build of configuration Debug for project balancing_robot ****
+make -j12 all 
+arm-none-eabi-size  balancing_robot.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12960	    104	   2128	  15192	   3b58	balancing_robot.elf
+Finished building: default.size.stdout
+ 
+
+11:22:13 Build Finished. 0 errors, 0 warnings. (took 200ms)
+
