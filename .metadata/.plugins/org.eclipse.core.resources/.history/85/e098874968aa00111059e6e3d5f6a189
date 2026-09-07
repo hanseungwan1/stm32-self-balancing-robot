@@ -134,8 +134,8 @@ int main(void)
 	  leftEncoderCnt = __HAL_TIM_GET_COUNTER(&htim3);
 	  rightEncoderCnt = __HAL_TIM_GET_COUNTER(&htim4);
 
-	  printf("Left Encoder CNT = %d\r\n", leftEncoderCnt);
-	  printf("Right Encoder CNT = %d\r\n", -rightEncoderCnt);
+	  printf("Left Encoder CNT = %d\r\n", encoderCnt);
+	  printf("Right Encoder CNT = %d\r\n", encoderCnt);
 
 	  HAL_Delay(100);
 

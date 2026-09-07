@@ -48,8 +48,7 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 int count = 0;
-int16_t leftEncoderCnt = 0;
-int16_t rightEncoderCnt = 0;
+int16_t encoderCnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -131,11 +130,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  leftEncoderCnt = __HAL_TIM_GET_COUNTER(&htim3);
-	  rightEncoderCnt = __HAL_TIM_GET_COUNTER(&htim4);
-
-	  printf("Left Encoder CNT = %d\r\n", leftEncoderCnt);
-	  printf("Right Encoder CNT = %d\r\n", -rightEncoderCnt);
+	  encoderCnt = __HAL_TIM_GET_COUNTER(&htim3);
+	  printf("Left Encoder CNT = %d\r\n", encoderCnt);
+	  printf("Right Encoder CNT = %d\r\n", encoderCnt);
 
 	  HAL_Delay(100);
 
