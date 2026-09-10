@@ -64,7 +64,7 @@ main-build: balancing_robot.elf secondary-outputs
 
 # Tool invocations
 balancing_robot.elf balancing_robot.map: $(OBJS) $(USER_OBJS) C:\study\balancing\balancing_robot\STM32F103RCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "balancing_robot.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\study\balancing\balancing_robot\STM32F103RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="balancing_robot.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "balancing_robot.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\study\balancing\balancing_robot\STM32F103RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="balancing_robot.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
