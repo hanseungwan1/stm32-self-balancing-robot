@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="TIM6_IRQHandler"/>
+		<item key="selection" value="USER CODE BEGIN PD"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="USER CODE BEGIN PD"/>
+			<item value="void Motor_Set(int left, int right)"/>
+			<item value="Motor_Set"/>
+			<item value="USER CODE BEGIN 4 "/>
+			<item value=" USER CODE BEGIN PFP"/>
 			<item value="TIM6_IRQHandler"/>
 			<item value="TIM6"/>
 			<item value="HAL_TIM_PeriodElapsedCallback"/>
@@ -18,8 +23,6 @@
 			<item value="string"/>
 			<item value="huart1"/>
 			<item value="SystemClock_Config"/>
-			<item value="static void MX_GPIO_Init(void)"/>
-			<item value="MX_GPIO_Init();"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

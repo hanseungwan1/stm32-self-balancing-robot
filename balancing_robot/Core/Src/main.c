@@ -31,7 +31,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define MOTOR_PWM_MAX 2879
+#define MOTOR_IGNORE_PULSE 1300
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -69,7 +70,8 @@ static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM8_Init(void);
 /* USER CODE BEGIN PFP */
-
+void Motor_Set(int left, int right);
+int PWM_Limit(int pwm);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -165,24 +167,8 @@ int main(void)
 //
 //	    printf("leftRPM = %.2f, rightRPM = %.2f\r\n", leftRPM, rightRPM);
 	  //모터 정방향
-	  __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
-	  __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, 1800);
+	  Motor_Set(1800, 0);
 
-	  __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 1800);
-	  __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, 0);
-
-	    HAL_Delay(5000);
-	    __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
-	    __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, 0);
-		  __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 0);
-		  __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, 0);
-
-		  // 모터 역방향
-	    __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 1800);
-	    __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, 0);
-		  __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 0);
-		  __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, 1800);
-	    HAL_Delay(5000);
 
     /* USER CODE END WHILE */
 
@@ -519,6 +505,51 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+int PWM_Limit(int pwm)
+{
+    if (pwm > MOTOR_PWM_MAX ) {
+        return MOTOR_PWM_MAX ;
+    }
+    else if (pwm < -MOTOR_PWM_MAX ) {
+        return -MOTOR_PWM_MAX ;
+    }
+    else {
+        return pwm;
+    }
+}
+
+
+void Motor_Set(int left, int right){
+
+	left = PWM_Limit(left);
+	right = PWM_Limit(right);
+
+	if(left > 0){
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, left);
+	} else if(left < 0){
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, -left);
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, 0);
+
+	} else {
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, 0);
+	}
+
+	if(right > 0){
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, right);
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, 0);
+	} else if(right < 0){
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 0);
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, -right);
+
+	} else {
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 0);
+		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, 0);
+	}
+
+}
+
 
 /* USER CODE END 4 */
 
