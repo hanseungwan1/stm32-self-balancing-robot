@@ -1,13 +1,25 @@
-20:24:58 **** Incremental Build of configuration Debug for project balancing_robot ****
+20:52:13 **** Incremental Build of configuration Debug for project balancing_robot ****
 make -j12 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xE -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:192:11: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+  192 |           printf("RPM = %.2f\r\n", rightRPM);
+      |           ^~~~~~
+../Core/Src/main.c:21:1: note: include '<stdio.h>' or provide a declaration of 'printf'
+   20 | #include "main.h"
+  +++ |+#include <stdio.h>
+   21 | 
+../Core/Src/main.c:192:11: warning: incompatible implicit declaration of built-in function 'printf' [-Wbuiltin-declaration-mismatch]
+  192 |           printf("RPM = %.2f\r\n", rightRPM);
+      |           ^~~~~~
+../Core/Src/main.c:192:11: note: include '<stdio.h>' or provide a declaration of 'printf'
 arm-none-eabi-gcc -o "balancing_robot.elf" @"objects.list"   -mcpu=cortex-m3 -T"C:\study\balancing\balancing_robot\STM32F103RCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="balancing_robot.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: balancing_robot.elf
  
 arm-none-eabi-size  balancing_robot.elf 
 arm-none-eabi-objdump -h -S balancing_robot.elf  > "balancing_robot.list"
    text	   data	    bss	    dec	    hex	filename
-  28256	    468	   2284	  31008	   7920	balancing_robot.elf
+  28428	    468	   2284	  31180	   79cc	balancing_robot.elf
 arm-none-eabi-objcopy  -O ihex balancing_robot.elf  "balancing_robot.hex"
 Finished building: default.size.stdout
  
@@ -16,5 +28,5 @@ Finished building: balancing_robot.list
  
  
 
-20:24:59 Build Finished. 0 errors, 0 warnings. (took 779ms)
+20:52:14 Build Finished. 0 errors, 2 warnings. (took 719ms)
 

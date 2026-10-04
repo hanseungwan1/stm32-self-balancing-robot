@@ -187,9 +187,9 @@ int main(void)
 //	  HAL_Delay(3000);
 
 
-	  Motor_Set(0, 2000);
+	  Motor_Set(0, 0);
 	  HAL_Delay(3000);
-	  printf("RPM = %.2f\r\n", rightRPM);
+	  printf("RPM = %.2f\r\n", leftRPM);
 
 	  HAL_Delay(3000);
 

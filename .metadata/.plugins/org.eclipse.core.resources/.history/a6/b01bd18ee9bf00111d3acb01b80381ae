@@ -168,31 +168,26 @@ int main(void)
 //	    printf("leftRPM = %.2f, rightRPM = %.2f\r\n", leftRPM, rightRPM);
 	  //모터 정방향
 
-//	  Motor_Set(1500, 0);
-//	  HAL_Delay(2000);
-//	  printf("RPM = %.2f\r\n", leftRPM);
-//
-//	  Motor_Set(2000, 0);
-//	  HAL_Delay(2000);
-//	  printf("RPM = %.2f\r\n", leftRPM);
-//
-//	  Motor_Set(2500, 0);
-//	  HAL_Delay(2000);
-//	  printf("RPM = %.2f\r\n", leftRPM);
-//
-//	  Motor_Set(0, 0);
-//	  HAL_Delay(3000);
-//	  printf("RPM = %.2f\r\n", leftRPM);
-//
-//	  HAL_Delay(3000);
+	  Motor_Set(1500, 0);
+	  HAL_Delay(2000);
+	  printf("RPM = %.2f\r\n", leftRPM);
 
+	  Motor_Set(2000, 0);
+	  HAL_Delay(2000);
+	  printf("RPM = %.2f\r\n", leftRPM);
 
-	  Motor_Set(0, 2000);
+	  Motor_Set(2500, 0);
+	  HAL_Delay(2000);
+	  printf("RPM = %.2f\r\n", leftRPM);
+
+	  Motor_Set(0, 0);
 	  HAL_Delay(3000);
-	  printf("RPM = %.2f\r\n", rightRPM);
+	  printf("RPM = %.2f\r\n", leftRPM);
 
 	  HAL_Delay(3000);
 
+	  모터 정지
+	  → 3초 대기
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
