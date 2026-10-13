@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "mpu6050.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -153,7 +153,7 @@ int main(void)
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_4);
 
-  HAL_Delay(500);  // ?Ñº?Ñú ?†Ñ?õê ?ïà?†ï?ôî ??Í∏?
+  HAL_Delay(500);  // ?ÔøΩÔøΩ?ÔøΩÔøΩ ?ÔøΩÔøΩ?ÔøΩÔøΩ ?ÔøΩÔøΩ?ÔøΩÔøΩ?ÔøΩÔøΩ ??ÔøΩ?
 
   printf("\r\n=== MPU6050 I2C TEST ===\r\n");
 
@@ -167,25 +167,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  while (1)
-	  {
-	      printf("\r\nI2C Scan Start\r\n");
 
-	      for (uint8_t addr = 1; addr < 127; addr++)
-	      {
-	          HAL_StatusTypeDef status =
-	              HAL_I2C_IsDeviceReady(&hi2c2, addr << 1, 2, 20);
-
-	          if (status == HAL_OK)
-	          {
-	              printf("Found: 0x%02X\r\n", addr);
-	          }
-	      }
-
-	      printf("I2C Scan End\r\n");
-
-	      HAL_Delay(3000);
-	  }
+	  uint8_t result = MPU6050_ReadReg(0x75);
+	  printf("mpu6050 Î¶¨ÌÑ¥ Í∞í %d\n", result);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
