@@ -1,0 +1,20 @@
+
+
+void SoftI2C_Start(){
+	HAL_GPIO_WritePin(MPU_SDA_GPIO_Port, MPU_SDA_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(MPU_SCL_GPIO_Port, MPU_SCL_Pin, GPIO_PIN_SET);
+
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(MPU_SDA_GPIO_Port, MPU_SDA_Pin, GPIO_PIN_RESET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin(MPU_SCL_GPIO_Port, MPU_SCL_Pin, GPIO_PIN_RESET);
+
+
+
+}
+
+//MPU_SDA_Pin
+//MPU_SCL_Pin
+//
+//MPU_SDA_GPIO_Port
+//MPU_SCL_GPIO_Port

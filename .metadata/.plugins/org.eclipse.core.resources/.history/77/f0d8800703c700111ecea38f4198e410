@@ -1,0 +1,10 @@
+#ifndef SOFT_I2C_H
+#define SOFT_I2C_H
+
+#include <stdint.h>
+
+void SoftI2C_Start(void);
+void SoftI2C_Stop(void);
+void SoftI2C_WriteByte(uint8_t data);
+
+#endif

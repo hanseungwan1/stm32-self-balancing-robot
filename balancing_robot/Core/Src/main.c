@@ -153,6 +153,13 @@ int main(void)
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_4);
 
+  HAL_Delay(500);  // ?Ñº?Ñú ?†Ñ?õê ?ïà?†ï?ôî ??Í∏?
+
+  printf("\r\n=== MPU6050 I2C TEST ===\r\n");
+
+  printf("SCL=%d, SDA=%d\r\n",
+         HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10),
+         HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11));
 
   /* USER CODE END 2 */
 
@@ -160,39 +167,25 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	    printf("L = %d, R = %d\r\n",
-//	           changeLeftEncoderCnt,
-//	           changeRightEncoderCnt);
-//
-//
-//	    printf("leftRPM = %.2f, rightRPM = %.2f\r\n", leftRPM, rightRPM);
-	  //Î™®ÌÑ∞ Ï†ïÎ∞©Ìñ•
+	  while (1)
+	  {
+	      printf("\r\nI2C Scan Start\r\n");
 
-//	  Motor_Set(1500, 0);
-//	  HAL_Delay(2000);
-//	  printf("RPM = %.2f\r\n", leftRPM);
-//
-//	  Motor_Set(2000, 0);
-//	  HAL_Delay(2000);
-//	  printf("RPM = %.2f\r\n", leftRPM);
-//
-//	  Motor_Set(2500, 0);
-//	  HAL_Delay(2000);
-//	  printf("RPM = %.2f\r\n", leftRPM);
-//
-//	  Motor_Set(0, 0);
-//	  HAL_Delay(3000);
-//	  printf("RPM = %.2f\r\n", leftRPM);
-//
-//	  HAL_Delay(3000);
+	      for (uint8_t addr = 1; addr < 127; addr++)
+	      {
+	          HAL_StatusTypeDef status =
+	              HAL_I2C_IsDeviceReady(&hi2c2, addr << 1, 2, 20);
 
+	          if (status == HAL_OK)
+	          {
+	              printf("Found: 0x%02X\r\n", addr);
+	          }
+	      }
 
-	  Motor_Set(0, 2000);
-	  HAL_Delay(3000);
-	  printf("RPM = %.2f\r\n", rightRPM);
+	      printf("I2C Scan End\r\n");
 
-	  HAL_Delay(3000);
-
+	      HAL_Delay(3000);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -510,11 +503,28 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, MPU_SDA_Pin|MPU_SCL_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : MPU_SDA_Pin */
+  GPIO_InitStruct.Pin = MPU_SDA_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(MPU_SDA_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : MPU_SCL_Pin */
+  GPIO_InitStruct.Pin = MPU_SCL_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(MPU_SCL_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LED_Pin */
   GPIO_InitStruct.Pin = LED_Pin;

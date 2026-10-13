@@ -1,0 +1,11 @@
+
+
+void SoftI2C_Start(){
+	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
+}
+
+MPU_SDA_Pin
+MPU_SCL_Pin
+
+MPU_SDA_GPIO_Port
+MPU_SCL_GPIO_Port
