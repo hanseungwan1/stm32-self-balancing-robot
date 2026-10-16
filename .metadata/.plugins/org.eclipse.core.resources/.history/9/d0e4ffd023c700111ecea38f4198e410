@@ -1,0 +1,61 @@
+//START
+//통신 시작
+//
+//
+//0xD0 전송 → ACK 확인
+//MPU6050 주소 + 쓰기 요청
+//
+//
+//0x75 전송 → ACK 확인
+//읽고 싶은 레지스터 지정
+//
+//
+//Repeated START
+//STOP 없이 다시 START
+//
+//
+//0xD1 전송 → ACK 확인
+//MPU6050 주소 + 읽기 요청
+//
+//1바이트 읽기 → NACK → STOP
+//센서 식별값 수신 후 통신 종료
+#include "soft_i2c.h"
+#include "mpu6050.h"
+
+uint8_t MPU6050_ReadReg(uint8_t reg)
+{
+
+    uint8_t data = 0;
+
+    SoftI2C_Start();
+    SoftI2C_WriteByte(0xD0);
+    if(AckCheck() != 1){
+    	return 0;
+    }
+
+    SoftI2C_WriteByte(reg);
+    AckCheck();
+
+
+    SoftI2C_Start();
+    SoftI2C_WriteByte(0xD1);
+    AckCheck();
+
+    data = SoftI2C_ReadByte();
+    SoftI2C_SendAck(1);
+
+    SoftI2C_Stop();
+
+
+    return data;
+}
+
+uint8_t AckCheck(){
+    uint8_t result = SoftI2C_WaitAck();
+    if(result != 0){
+    	printf("mpu6050 ack 받기 실패");
+    	return 0;
+    }
+
+    return 1;
+}

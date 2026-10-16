@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "mpu6050.h"
+#include "attitude.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -161,6 +162,9 @@ int main(void)
          HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10),
          HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11));
 
+  MPU6050_WriteReg(0x6B, 0x00);
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -168,8 +172,53 @@ int main(void)
   while (1)
   {
 
-	  uint8_t result = MPU6050_ReadReg(0x75);
-	  printf("mpu6050 리턴 값 %d\n", result);
+	  uint8_t imu_buffer[14];
+
+	  MPU6050_ReadBytes(0x3B, imu_buffer, 14);
+
+
+	  int16_t accel_x = (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
+	  int16_t accel_y = (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
+	  int16_t accel_z = (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
+
+	  int16_t temp = (int16_t)((imu_buffer[6] << 8) | imu_buffer[7]);
+
+	  int16_t gyro_x = (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
+	  int16_t gyro_y = (int16_t)((imu_buffer[10] << 8) | imu_buffer[11]);
+	  int16_t gyro_z = (int16_t)((imu_buffer[12] << 8) | imu_buffer[13]);
+
+	  float angle = Attitude_GetAccelAngle(accel_y, accel_z);
+
+	  printf("Angle = %.2f deg\r\n", angle);
+
+	  printf("accel_x=%d, accel_y=%d, accel_z=%d\r\n",
+	         (int)accel_x, (int)accel_y, (int)accel_z);
+
+	  printf("gyro_X=%d, gyro_Y=%d, gyro_Z=%d\r\n",
+	         (int)gyro_x, (int)gyro_y, (int)gyro_z);
+
+	  printf("temp=%d\r\n\r\n", (int)temp);
+	  HAL_Delay(100);
+
+	  // 가속도 센서 측정
+//	  uint8_t accel_x_h = MPU6050_ReadReg(0x3B);
+//	  uint8_t accel_x_l = MPU6050_ReadReg(0x3C);
+//
+//	  uint8_t accel_y_h = MPU6050_ReadReg(0x3D);
+//	  uint8_t accel_y_l = MPU6050_ReadReg(0x3E);
+//
+//	  uint8_t accel_z_h = MPU6050_ReadReg(0x3F);
+//	  uint8_t accel_z_l = MPU6050_ReadReg(0x40);
+//
+//	  int16_t accel_x = (int16_t)((accel_x_h << 8) | accel_x_l);
+//	  int16_t accel_y = (int16_t)((accel_y_h << 8) | accel_y_l);
+//	  int16_t accel_z = (int16_t)((accel_z_h << 8) | accel_z_l);
+//
+//	  printf("accel_x = %d\r\n", (int)accel_x);
+//	  printf("accel_y = %d\r\n", (int)accel_y);
+//	  printf("accel_z = %d\r\n\r\n", (int)accel_z);
+
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

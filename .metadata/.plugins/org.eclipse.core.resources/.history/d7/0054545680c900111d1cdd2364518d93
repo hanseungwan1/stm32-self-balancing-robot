@@ -1,0 +1,9 @@
+#include "attitude.h"
+#include <math.h>
+
+float Attitude_GetAccelAngle(int16_t accel_y, int16_t accel_z){
+
+	return atan2f(accel_y, accel_z) * 180 / 3.14;
+
+
+}

@@ -21,6 +21,7 @@
 //센서 식별값 수신 후 통신 종료
 #include "soft_i2c.h"
 #include "mpu6050.h"
+#include "stddef.h"
 
 uint8_t MPU6050_ReadReg(uint8_t reg)
 {
@@ -29,16 +30,29 @@ uint8_t MPU6050_ReadReg(uint8_t reg)
 
     SoftI2C_Start();
     SoftI2C_WriteByte(0xD0);
-    SoftI2C_WaitAck();
+
+    if(SoftI2C_WaitAck() != 0){
+    	printf("mpu6050 ack 응답 실패");
+        SoftI2C_Stop();
+    	return 0;
+    }
 
     SoftI2C_WriteByte(reg);
-    SoftI2C_WaitAck();
 
+    if(SoftI2C_WaitAck() != 0){
+    	printf("mpu6050 ack 응답 실패");
+        SoftI2C_Stop();
+    	return 0;
+    }
 
     SoftI2C_Start();
     SoftI2C_WriteByte(0xD1);
-    SoftI2C_WaitAck();
 
+    if(SoftI2C_WaitAck() != 0){
+    	printf("mpu6050 ack 응답 실패");
+        SoftI2C_Stop();
+    	return 0;
+    }
     data = SoftI2C_ReadByte();
     SoftI2C_SendAck(1);
 
@@ -47,3 +61,81 @@ uint8_t MPU6050_ReadReg(uint8_t reg)
 
     return data;
 }
+
+void MPU6050_WriteReg(uint8_t reg, uint8_t data)
+{
+    SoftI2C_Start();
+    SoftI2C_WriteByte(0xD0);
+
+    if(SoftI2C_WaitAck() != 0){
+    	printf("mpu6050 ack 응답 실패");
+        SoftI2C_Stop();
+        return;
+    }
+
+    SoftI2C_WriteByte(reg);
+    if(SoftI2C_WaitAck() != 0){
+    	printf("mpu6050 ack 응답 실패");
+        SoftI2C_Stop();
+        return;
+    }
+
+    SoftI2C_WriteByte(data);
+    if(SoftI2C_WaitAck() != 0){
+    	printf("mpu6050 ack 응답 실패");
+        SoftI2C_Stop();
+        return;
+    }
+
+    SoftI2C_Stop();
+
+}
+
+void MPU6050_ReadBytes(uint8_t reg, uint8_t *buffer, uint8_t len)
+{
+    if (len == 0 || buffer == NULL) {
+        return;
+    }
+
+    SoftI2C_Start();
+    SoftI2C_WriteByte(0xD0);
+
+    if (SoftI2C_WaitAck() != 0) {
+        printf("mpu6050 ack 응답 실패\r\n");
+        SoftI2C_Stop();
+        return;
+    }
+
+    SoftI2C_WriteByte(reg);
+
+    if (SoftI2C_WaitAck() != 0) {
+        printf("mpu6050 ack 응답 실패\r\n");
+        SoftI2C_Stop();
+        return;
+    }
+
+    SoftI2C_Start();
+    SoftI2C_WriteByte(0xD1);
+
+    if (SoftI2C_WaitAck() != 0) {
+        printf("mpu6050 ack 응답 실패\r\n");
+        SoftI2C_Stop();
+        return;
+    }
+
+    // 연속 데이터 수신
+    for (uint8_t i = 0; i < len; i++) {
+
+        buffer[i] = SoftI2C_ReadByte();
+
+        if (i == len - 1) {
+            SoftI2C_SendAck(1);  // 마지막 바이트: NACK
+        } else {
+            SoftI2C_SendAck(0);  // 나머지 바이트: ACK
+        }
+    }
+
+    // 모든 데이터 수신 후 통신 종료
+    SoftI2C_Stop();
+}
+

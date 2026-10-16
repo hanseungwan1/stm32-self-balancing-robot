@@ -1,0 +1,8 @@
+#ifndef ATTITUDE_H
+#define ATTITUDE_H
+
+#include <stdint.h>
+
+float Attitude_GetAccelAngle(int16_t accel_y, int16_t accel_z);
+
+#endif

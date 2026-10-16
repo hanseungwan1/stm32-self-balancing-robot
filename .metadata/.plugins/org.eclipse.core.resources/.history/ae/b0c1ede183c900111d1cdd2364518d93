@@ -1,0 +1,15 @@
+#include "attitude.h"
+#include <math.h>
+
+float Attitude_GetAccelAngle(int16_t accel_y, int16_t accel_z){
+
+	return atan2f((float)accel_y, (float)accel_z) * 180 / 3.14;
+
+
+}
+
+float Attitude_GetGyroRate(int16_t gyro_x, float bias){
+
+		return((float)gyro_x - bias) / 131;
+
+}

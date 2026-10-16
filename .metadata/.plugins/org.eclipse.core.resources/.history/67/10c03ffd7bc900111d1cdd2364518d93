@@ -1,0 +1,9 @@
+#ifndef MPU6050_H
+#define MPU6050_H
+
+#include <stdint.h>
+
+float Attitude_GetAccelAngle(int16_t accel_y, int16_t accel_z);
+
+#endif
+
