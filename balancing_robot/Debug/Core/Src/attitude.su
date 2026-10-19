@@ -1,1 +1,4 @@
-../Core/Src/attitude.c:4:7:Attitude_GetAccelAngle	24	static
+../Core/Src/attitude.c:5:7:Attitude_GetAccelAngle	24	static
+../Core/Src/attitude.c:13:7:Attitude_GetGyroRate	16	static
+../Core/Src/attitude.c:19:7:Attitude_IntegrateGyro	24	static
+../Core/Src/attitude.c:27:7:Attitude_ComplementaryFilter	32	static

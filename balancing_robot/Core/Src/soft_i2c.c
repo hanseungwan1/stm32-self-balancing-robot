@@ -3,7 +3,7 @@
 
 static void I2C_Delay(void)
 {
-    for (volatile uint32_t i = 0; i < 100; i++)
+    for (volatile uint32_t i = 0; i < 20; i++)
     {
         __NOP();
     }

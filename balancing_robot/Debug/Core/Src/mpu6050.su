@@ -1,3 +1,4 @@
 ../Core/Src/mpu6050.c:26:9:MPU6050_ReadReg	24	static
 ../Core/Src/mpu6050.c:65:6:MPU6050_WriteReg	16	static
 ../Core/Src/mpu6050.c:94:6:MPU6050_ReadBytes	32	static
+../Core/Src/mpu6050.c:142:7:MPU6050_CalibrateGyroX	24	static

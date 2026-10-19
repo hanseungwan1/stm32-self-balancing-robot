@@ -58,7 +58,7 @@ volatile int16_t changeLeftEncoderCnt = 0;
 volatile int16_t changeRightEncoderCnt = 0;
 float leftRPM = 0.0f;
 float rightRPM = 0.0f;
-
+volatile uint8_t imu_flag = 0;
 
 /* USER CODE END PV */
 
@@ -98,6 +98,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				prevLeftEncoderCnt = currentLeftEncoderCnt;
 				prevRightEncoderCnt = currentRightEncoderCnt;
 
+		        imu_flag = 1;
 			}
 		}
 
@@ -163,8 +164,13 @@ int main(void)
          HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11));
 
   MPU6050_WriteReg(0x6B, 0x00);
+  HAL_Delay(2000);               // 2초 동안 기다리기
+  float gyro_bias = MPU6050_CalibrateGyroX();
 
-
+  printf("Gyro X Bias = %.2f\r\n", gyro_bias);
+  float angle = 0.0f;
+  uint8_t angle_initialized = 0;
+  uint32_t print_count = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -172,33 +178,130 @@ int main(void)
   while (1)
   {
 
-	  uint8_t imu_buffer[14];
+	    if (imu_flag)
+	    {
+	        imu_flag = 0;
 
-	  MPU6050_ReadBytes(0x3B, imu_buffer, 14);
+	        uint8_t imu_buffer[14] = {0};
 
 
-	  int16_t accel_x = (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
-	  int16_t accel_y = (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
-	  int16_t accel_z = (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
+	        // MPU6050 데이터 14바이트 읽기
+	        MPU6050_ReadBytes(0x3B, imu_buffer, 14);
 
-	  int16_t temp = (int16_t)((imu_buffer[6] << 8) | imu_buffer[7]);
+	        // 센서 RAW 데이터 추출
+	        int16_t accel_x =
+	            (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
 
-	  int16_t gyro_x = (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
-	  int16_t gyro_y = (int16_t)((imu_buffer[10] << 8) | imu_buffer[11]);
-	  int16_t gyro_z = (int16_t)((imu_buffer[12] << 8) | imu_buffer[13]);
+	        int16_t accel_y =
+	            (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
 
-	  float angle = Attitude_GetAccelAngle(accel_y, accel_z);
+	        int16_t accel_z =
+	            (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
 
-	  printf("Angle = %.2f deg\r\n", angle);
+	        int16_t gyro_x =
+	            (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
 
-	  printf("accel_x=%d, accel_y=%d, accel_z=%d\r\n",
-	         (int)accel_x, (int)accel_y, (int)accel_z);
+	        // 각도 및 각속도 계산
+	        float accel_angle =
+	            Attitude_GetAccelAngle(accel_y, accel_z);
 
-	  printf("gyro_X=%d, gyro_Y=%d, gyro_Z=%d\r\n",
-	         (int)gyro_x, (int)gyro_y, (int)gyro_z);
+	        float gyro_rate =
+	            Attitude_GetGyroRate(gyro_x, gyro_bias);
 
-	  printf("temp=%d\r\n\r\n", (int)temp);
-	  HAL_Delay(100);
+	        if (angle_initialized == 0)
+	        {
+	            angle = accel_angle;
+	            angle_initialized = 1;
+	        }
+	        else
+	        {
+	            angle = Attitude_ComplementaryFilter(
+	                angle,
+	                gyro_rate,
+	                accel_angle,
+	                0.01f
+	            );
+	        }
+		    if (++print_count >= 100)
+		    {
+		        print_count = 0;
+
+		        printf("accel_angle = %.2f deg\r\n", accel_angle);
+		        printf("gyro_rate = %.2f deg/s\r\n", gyro_rate);
+		        printf("filtered_angle = %.2f deg\r\n\r\n", angle);
+		    }
+	    }
+
+
+
+
+//	  uint32_t start = HAL_GetTick();
+//
+//	  MPU6050_ReadBytes(0x3B, imu_buffer, 14);
+//
+//	  uint32_t elapsed = HAL_GetTick() - start;
+//	  printf("I2C read time = %lu ms\r\n", elapsed);
+//	uint8_t imu_buffer[14];
+//
+//	  if (imu_flag)
+//	  {
+//	      imu_flag = 0;
+//	      MPU6050_ReadBytes(0x3B, imu_buffer, 14);
+//	 	 int16_t accel_x = (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
+//	 	 int16_t accel_y = (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
+//	 	 int16_t accel_z = (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
+//	 	 int16_t gyro_x = (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
+//
+//	 	 float accel_angle = Attitude_GetAccelAngle(accel_y, accel_z);
+//	 	 float gyro_rate = Attitude_GetGyroRate(gyro_x, gyro_bias);
+//	 	static uint8_t print_count = 0;
+//
+//	 	if (++print_count >= 10)
+//	 	{
+//	 	    print_count = 0;
+//
+//	 	    printf("accel_angle = %.2f deg\r\n", accel_angle);
+//	 	    printf("gyro_rate = %.2f deg/s\r\n", gyro_rate);
+//	 	}
+//	      // 기존 14바이트 센서 읽기 코드
+//	      // accel_angle 계산
+//	      // gyro_rate 계산
+//	  }
+
+
+//	  MPU6050_ReadBytes(0x43, imu_buffer, 2);
+//	  int16_t gyro_x = (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
+//
+//	  float gyro_rate = Attitude_GetGyroRate(gyro_x, gyro_bias);
+//	  printf("gyro_rate = %.2f deg\r\n", gyro_rate);
+//	  HAL_Delay(100);
+//	  uint8_t imu_buffer[14];
+//
+//	  MPU6050_ReadBytes(0x3B, imu_buffer, 14);
+//
+//
+//	  int16_t accel_x = (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
+//	  int16_t accel_y = (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
+//	  int16_t accel_z = (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
+//
+//	  int16_t temp = (int16_t)((imu_buffer[6] << 8) | imu_buffer[7]);
+//
+//	  int16_t gyro_x = (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
+//	  int16_t gyro_y = (int16_t)((imu_buffer[10] << 8) | imu_buffer[11]);
+//	  int16_t gyro_z = (int16_t)((imu_buffer[12] << 8) | imu_buffer[13]);
+//
+//	  float angle = Attitude_GetAccelAngle(accel_y, accel_z);
+//
+//	  printf("Angle = %.2f deg\r\n", angle);
+//
+//	  printf("accel_x=%d, accel_y=%d, accel_z=%d\r\n",
+//	         (int)accel_x, (int)accel_y, (int)accel_z);
+//
+//	  printf("gyro_X=%d, gyro_Y=%d, gyro_Z=%d\r\n",
+//	         (int)gyro_x, (int)gyro_y, (int)gyro_z);
+//
+//	  printf("temp=%d\r\n\r\n", (int)temp);
+//	  HAL_Delay(100);
 
 	  // 가속도 센서 측정
 //	  uint8_t accel_x_h = MPU6050_ReadReg(0x3B);
@@ -218,7 +321,6 @@ int main(void)
 //	  printf("accel_y = %d\r\n", (int)accel_y);
 //	  printf("accel_z = %d\r\n\r\n", (int)accel_z);
 
-	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

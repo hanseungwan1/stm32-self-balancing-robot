@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="SoftI2C_WaitAck"/>
+		<item key="selection" value="Attitude_IntegrateGyro"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="Attitude_IntegrateGyro"/>
+			<item value="HAL_TIM_Base_Start_IT(&amp;htim6);"/>
 			<item value="SoftI2C_WaitAck"/>
 			<item value="SoftI2C_ReadByte"/>
 			<item value="HAL_I2C_MspInit"/>
@@ -21,8 +23,6 @@
 			<item value="TIM6_IRQHandler"/>
 			<item value="TIM6"/>
 			<item value="HAL_TIM_PeriodElapsedCallback"/>
-			<item value="MX_TIM6_Init"/>
-			<item value="USER CODE BEGIN"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>

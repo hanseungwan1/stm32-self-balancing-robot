@@ -1,6 +1,7 @@
 #include "attitude.h"
 #include <math.h>
 
+//가속도계로 기울기 계산
 float Attitude_GetAccelAngle(int16_t accel_y, int16_t accel_z){
 
 	return atan2f((float)accel_y, (float)accel_z) * 180 / 3.14;
@@ -8,6 +9,7 @@ float Attitude_GetAccelAngle(int16_t accel_y, int16_t accel_z){
 
 }
 
+//자이로로 회전 속도 계산
 float Attitude_GetGyroRate(int16_t gyro_x, float bias){
 
 		return((float)gyro_x - bias) / 131.0f;
@@ -19,10 +21,9 @@ float Attitude_IntegrateGyro(float previous_angle,
                              float dt){
 
 	return previous_angle + (gyro_rate * dt);
-
-
 }
 
+// 두 센서를 합치기
 float Attitude_ComplementaryFilter(float previous_angle,
                                    float gyro_rate,
                                    float accel_angle,

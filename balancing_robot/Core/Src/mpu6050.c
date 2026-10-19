@@ -139,3 +139,17 @@ void MPU6050_ReadBytes(uint8_t reg, uint8_t *buffer, uint8_t len)
     SoftI2C_Stop();
 }
 
+float MPU6050_CalibrateGyroX(){
+
+	int32_t sum = 0;
+	uint8_t buffer[2];
+
+	for(int i = 0; i < 100; i++){
+		MPU6050_ReadBytes(0x43, buffer ,2);
+		int16_t gyro_x = (int16_t)((buffer[0] << 8) | buffer[1]);
+		sum += gyro_x;
+		HAL_Delay(5);
+	}
+	return sum / 100.0f;
+
+}
