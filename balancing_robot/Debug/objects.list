@@ -1,5 +1,6 @@
 "./Core/Src/attitude.o"
 "./Core/Src/main.o"
+"./Core/Src/motor.o"
 "./Core/Src/mpu6050.o"
 "./Core/Src/soft_i2c.o"
 "./Core/Src/stm32f1xx_hal_msp.o"

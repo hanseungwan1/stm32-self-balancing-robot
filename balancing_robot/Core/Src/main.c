@@ -20,6 +20,7 @@
 #include "main.h"
 #include "mpu6050.h"
 #include "attitude.h"
+#include "motor.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -32,8 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define MOTOR_PWM_MAX 2879
-#define MOTOR_IGNORE_PULSE 1300
+#define TARGET_ANGLE 0.0f
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -71,8 +71,6 @@ static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM8_Init(void);
 /* USER CODE BEGIN PFP */
-void Motor_Set(int left, int right);
-int PWM_Limit(int pwm);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -222,7 +220,7 @@ int main(void)
 	                0.01f
 	            );
 	        }
-		    if (++print_count >= 100)
+		    if (++print_count >= 10)
 		    {
 		        print_count = 0;
 
@@ -231,95 +229,6 @@ int main(void)
 		        printf("filtered_angle = %.2f deg\r\n\r\n", angle);
 		    }
 	    }
-
-
-
-
-//	  uint32_t start = HAL_GetTick();
-//
-//	  MPU6050_ReadBytes(0x3B, imu_buffer, 14);
-//
-//	  uint32_t elapsed = HAL_GetTick() - start;
-//	  printf("I2C read time = %lu ms\r\n", elapsed);
-//	uint8_t imu_buffer[14];
-//
-//	  if (imu_flag)
-//	  {
-//	      imu_flag = 0;
-//	      MPU6050_ReadBytes(0x3B, imu_buffer, 14);
-//	 	 int16_t accel_x = (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
-//	 	 int16_t accel_y = (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
-//	 	 int16_t accel_z = (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
-//	 	 int16_t gyro_x = (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
-//
-//	 	 float accel_angle = Attitude_GetAccelAngle(accel_y, accel_z);
-//	 	 float gyro_rate = Attitude_GetGyroRate(gyro_x, gyro_bias);
-//	 	static uint8_t print_count = 0;
-//
-//	 	if (++print_count >= 10)
-//	 	{
-//	 	    print_count = 0;
-//
-//	 	    printf("accel_angle = %.2f deg\r\n", accel_angle);
-//	 	    printf("gyro_rate = %.2f deg/s\r\n", gyro_rate);
-//	 	}
-//	      // 기존 14바이트 센서 읽기 코드
-//	      // accel_angle 계산
-//	      // gyro_rate 계산
-//	  }
-
-
-//	  MPU6050_ReadBytes(0x43, imu_buffer, 2);
-//	  int16_t gyro_x = (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
-//
-//	  float gyro_rate = Attitude_GetGyroRate(gyro_x, gyro_bias);
-//	  printf("gyro_rate = %.2f deg\r\n", gyro_rate);
-//	  HAL_Delay(100);
-//	  uint8_t imu_buffer[14];
-//
-//	  MPU6050_ReadBytes(0x3B, imu_buffer, 14);
-//
-//
-//	  int16_t accel_x = (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
-//	  int16_t accel_y = (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
-//	  int16_t accel_z = (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
-//
-//	  int16_t temp = (int16_t)((imu_buffer[6] << 8) | imu_buffer[7]);
-//
-//	  int16_t gyro_x = (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
-//	  int16_t gyro_y = (int16_t)((imu_buffer[10] << 8) | imu_buffer[11]);
-//	  int16_t gyro_z = (int16_t)((imu_buffer[12] << 8) | imu_buffer[13]);
-//
-//	  float angle = Attitude_GetAccelAngle(accel_y, accel_z);
-//
-//	  printf("Angle = %.2f deg\r\n", angle);
-//
-//	  printf("accel_x=%d, accel_y=%d, accel_z=%d\r\n",
-//	         (int)accel_x, (int)accel_y, (int)accel_z);
-//
-//	  printf("gyro_X=%d, gyro_Y=%d, gyro_Z=%d\r\n",
-//	         (int)gyro_x, (int)gyro_y, (int)gyro_z);
-//
-//	  printf("temp=%d\r\n\r\n", (int)temp);
-//	  HAL_Delay(100);
-
-	  // 가속도 센서 측정
-//	  uint8_t accel_x_h = MPU6050_ReadReg(0x3B);
-//	  uint8_t accel_x_l = MPU6050_ReadReg(0x3C);
-//
-//	  uint8_t accel_y_h = MPU6050_ReadReg(0x3D);
-//	  uint8_t accel_y_l = MPU6050_ReadReg(0x3E);
-//
-//	  uint8_t accel_z_h = MPU6050_ReadReg(0x3F);
-//	  uint8_t accel_z_l = MPU6050_ReadReg(0x40);
-//
-//	  int16_t accel_x = (int16_t)((accel_x_h << 8) | accel_x_l);
-//	  int16_t accel_y = (int16_t)((accel_y_h << 8) | accel_y_l);
-//	  int16_t accel_z = (int16_t)((accel_z_h << 8) | accel_z_l);
-//
-//	  printf("accel_x = %d\r\n", (int)accel_x);
-//	  printf("accel_y = %d\r\n", (int)accel_y);
-//	  printf("accel_z = %d\r\n\r\n", (int)accel_z);
 
     /* USER CODE END WHILE */
 
@@ -673,51 +582,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-int PWM_Limit(int pwm)
-{
-    if (pwm > MOTOR_PWM_MAX ) {
-        return MOTOR_PWM_MAX ;
-    }
-    else if (pwm < -MOTOR_PWM_MAX ) {
-        return -MOTOR_PWM_MAX ;
-    }
-    else {
-        return pwm;
-    }
-}
-
-
-void Motor_Set(int left, int right){
-
-	left = PWM_Limit(left);
-	right = PWM_Limit(right);
-
-	if(left > 0){
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, left);
-	} else if(left < 0){
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, -left);
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, 0);
-
-	} else {
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 0);
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_2, 0);
-	}
-
-	if(right > 0){
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, right);
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, 0);
-	} else if(right < 0){
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 0);
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, -right);
-
-	} else {
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 0);
-		__HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_4, 0);
-	}
-
-}
-
 
 /* USER CODE END 4 */
 

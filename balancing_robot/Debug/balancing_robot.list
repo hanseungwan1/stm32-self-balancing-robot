@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  000091d4  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000c8e0  00000000  00000000  000091fd  2**0
+ 12 .debug_info   0000c87f  00000000  00000000  000091fd  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00002026  00000000  00000000  00015add  2**0
+ 13 .debug_abbrev 00001fc9  00000000  00000000  00015a7c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000d20  00000000  00000000  00017b08  2**3
+ 14 .debug_aranges 00000d10  00000000  00000000  00017a48  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 00000a31  00000000  00000000  00018828  2**0
+ 15 .debug_rnglists 00000a24  00000000  00000000  00018758  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0001a8ac  00000000  00000000  00019259  2**0
+ 16 .debug_macro  0001a8b0  00000000  00000000  0001917c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000ebdf  00000000  00000000  00033b05  2**0
+ 17 .debug_line   0000eb81  00000000  00000000  00033a2c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0009ace0  00000000  00000000  000426e4  2**0
+ 18 .debug_str    0009acb2  00000000  00000000  000425ad  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000dd3c4  2**0
+ 19 .comment      00000043  00000000  00000000  000dd25f  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000048b0  00000000  00000000  000dd408  2**2
+ 20 .debug_frame  00004864  00000000  00000000  000dd2a4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000051  00000000  00000000  000e1cb8  2**0
+ 21 .debug_line_str 00000051  00000000  00000000  000e1b08  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1578,7 +1578,7 @@ float Attitude_ComplementaryFilter(float previous_angle,
  80012a4:	3ca3d70a 	.word	0x3ca3d70a
 
 080012a8 <_write>:
-int PWM_Limit(int pwm);
+/* USER CODE BEGIN PFP */
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -2002,12 +2002,12 @@ int main(void)
 	                0.01f
 	            );
 	        }
-		    if (++print_count >= 100)
+		    if (++print_count >= 10)
  8001558:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
  800155a:	3301      	adds	r3, #1
  800155c:	627b      	str	r3, [r7, #36]	@ 0x24
  800155e:	6a7b      	ldr	r3, [r7, #36]	@ 0x24
- 8001560:	2b63      	cmp	r3, #99	@ 0x63
+ 8001560:	2b09      	cmp	r3, #9
  8001562:	d9a7      	bls.n	80014b4 <main+0xdc>
 		    {
 		        print_count = 0;
