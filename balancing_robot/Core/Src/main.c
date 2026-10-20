@@ -21,6 +21,7 @@
 #include "mpu6050.h"
 #include "attitude.h"
 #include "motor.h"
+#include "pid.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -169,6 +170,7 @@ int main(void)
   float angle = 0.0f;
   uint8_t angle_initialized = 0;
   uint32_t print_count = 0;
+//  Motor_Set(1500, 1500);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -219,14 +221,36 @@ int main(void)
 	                accel_angle,
 	                0.01f
 	            );
+	            float p_output = PID_P(TARGET_ANGLE, angle, 50.0f);
+
+	            if (angle > 20.0f || angle < -20.0f)
+	            {
+	                Motor_Set(0, 0);
+	            }
+	            else
+	            {
+	            	if(p_output > 0){
+	            		p_output += 1500;
+	            		if(p_output > 2879){
+	            			p_output = 2879;
+	            		}
+	            	} else if(p_output < 0){
+	            		p_output -= 1500;
+	            		if(p_output < -2879){
+	            			p_output = -2879;
+	            		}
+	            	}
+	                Motor_Set((int)p_output, (int)p_output);
+	            }
+
 	        }
 		    if (++print_count >= 10)
 		    {
 		        print_count = 0;
 
-		        printf("accel_angle = %.2f deg\r\n", accel_angle);
-		        printf("gyro_rate = %.2f deg/s\r\n", gyro_rate);
-		        printf("filtered_angle = %.2f deg\r\n\r\n", angle);
+//		        printf("accel_angle = %.2f deg\r\n", accel_angle);
+//		        printf("gyro_rate = %.2f deg/s\r\n", gyro_rate);
+//		        printf("filtered_angle = %.2f deg\r\n\r\n", angle);
 		    }
 	    }
 

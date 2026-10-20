@@ -1,5 +1,0 @@
-
-
-void SoftI2C_Start(){
-	HAL_GPIO_WritePin(GPIOx, GPIO_Pin, PinState);
-}
