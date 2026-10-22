@@ -178,81 +178,84 @@ int main(void)
   while (1)
   {
 
-	    if (imu_flag)
-	    {
-	        imu_flag = 0;
-
-	        uint8_t imu_buffer[14] = {0};
-
-
-	        // MPU6050 데이터 14바이트 읽기
-	        MPU6050_ReadBytes(0x3B, imu_buffer, 14);
-
-	        // 센서 RAW 데이터 추출
-	        int16_t accel_x =
-	            (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
-
-	        int16_t accel_y =
-	            (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
-
-	        int16_t accel_z =
-	            (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
-
-	        int16_t gyro_x =
-	            (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
-
-	        // 각도 및 각속도 계산
-	        float accel_angle =
-	            Attitude_GetAccelAngle(accel_y, accel_z);
-
-	        float gyro_rate =
-	            Attitude_GetGyroRate(gyro_x, gyro_bias);
-
-	        if (angle_initialized == 0)
-	        {
-	            angle = accel_angle;
-	            angle_initialized = 1;
-	        }
-	        else
-	        {
-	            angle = Attitude_ComplementaryFilter(
-	                angle,
-	                gyro_rate,
-	                accel_angle,
-	                0.01f
-	            );
-	            float p_output = PID_P(TARGET_ANGLE, angle, 50.0f);
-
-	            if (angle > 20.0f || angle < -20.0f)
-	            {
-	                Motor_Set(0, 0);
-	            }
-	            else
-	            {
-	            	if(p_output > 0){
-	            		p_output += 1500;
-	            		if(p_output > 2879){
-	            			p_output = 2879;
-	            		}
-	            	} else if(p_output < 0){
-	            		p_output -= 1500;
-	            		if(p_output < -2879){
-	            			p_output = -2879;
-	            		}
-	            	}
-	                Motor_Set((int)p_output, (int)p_output);
-	            }
-
-	        }
-		    if (++print_count >= 10)
-		    {
-		        print_count = 0;
-
-//		        printf("accel_angle = %.2f deg\r\n", accel_angle);
-//		        printf("gyro_rate = %.2f deg/s\r\n", gyro_rate);
-//		        printf("filtered_angle = %.2f deg\r\n\r\n", angle);
-		    }
-	    }
+	  // 시작
+//	    if (imu_flag)
+//	    {
+//	        imu_flag = 0;
+//
+//	        uint8_t imu_buffer[14] = {0};
+//
+//
+//	        // MPU6050 데이터 14바이트 읽기
+//	        MPU6050_ReadBytes(0x3B, imu_buffer, 14);
+//
+//	        // 센서 RAW 데이터 추출
+//	        int16_t accel_x =
+//	            (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
+//
+//	        int16_t accel_y =
+//	            (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
+//
+//	        int16_t accel_z =
+//	            (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
+//
+//	        int16_t gyro_x =
+//	            (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
+//
+//	        // 각도 및 각속도 계산
+//	        float accel_angle =
+//	            Attitude_GetAccelAngle(accel_y, accel_z);
+//
+//	        float gyro_rate =
+//	            Attitude_GetGyroRate(gyro_x, gyro_bias);
+//
+//	        if (angle_initialized == 0)
+//	        {
+//	            angle = accel_angle;
+//	            angle_initialized = 1;
+//	        }
+//	        else
+//	        {
+//	            angle = Attitude_ComplementaryFilter(
+//	                angle,
+//	                gyro_rate,
+//	                accel_angle,
+//	                0.01f
+//	            );
+//
+//	            float p_control = PID_P(TARGET_ANGLE, angle, 50.0f);
+//	            float d_control = PID_D(gyro_rate, 5.0f);
+//
+//	            float pd_output = p_control + d_control;
+//
+//	            if (angle > 20.0f || angle < -20.0f)
+//	            {
+//	                Motor_Set(0, 0);
+//	            }
+//	            else
+//	            {
+//	            	if(pd_output > 0){
+//	            		pd_output += 1500;
+//	            		if(pd_output > 2879){
+//	            			pd_output = 2879;
+//	            		}
+//	            	} else if(pd_output < 0){
+//	            		pd_output -= 1500;
+//	            		if(pd_output < -2879){
+//	            			pd_output = -2879;
+//	            		}
+//	            	}
+//	                Motor_Set((int)pd_output, (int)pd_output);
+//	            }
+//
+//	        }
+//		    if (++print_count >= 10)
+//		    {
+//		        print_count = 0;
+//
+//		    }
+//	    }
+	    // 종료
 
     /* USER CODE END WHILE */
 

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="PWM_Limit"/>
+		<item key="selection" value="Motor_Set"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="PWM_Limit"/>
 			<item value="Motor_Set"/>
+			<item value="HAL_TIM_PWM_Start"/>
+			<item value="TARGET_ANGLE"/>
+			<item value="angle"/>
+			<item value="imu_flag"/>
+			<item value="PWM_Limit"/>
 			<item value="HAL_TIM_PeriodElapsedCallback"/>
 			<item value="MOTOR_IGNORE_PULSE"/>
 			<item value="MOTOR_PWM_MAX"/>
 			<item value="HAL_Delay"/>
-			<item value="imu_flag"/>
 			<item value="print_count "/>
 			<item value="accel_angle "/>
 			<item value="        imu_flag = 1;&#x0A;"/>
 			<item value="Attitude_GetGyroRate"/>
 			<item value="Attitude_IntegrateGyro"/>
-			<item value="HAL_TIM_Base_Start_IT(&amp;htim6);"/>
-			<item value="SoftI2C_WaitAck"/>
-			<item value="SoftI2C_ReadByte"/>
 		</list>
 		<list key="replacehistory">
 			<item value=""/>
