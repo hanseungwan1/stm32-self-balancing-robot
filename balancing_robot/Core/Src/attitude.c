@@ -12,7 +12,7 @@ float Attitude_GetAccelAngle(int16_t accel_y, int16_t accel_z){
 //자이로로 회전 속도 계산
 float Attitude_GetGyroRate(int16_t gyro_x, float bias){
 
-		return((float)gyro_x - bias) / 131.0f;
+		return((float)gyro_x - bias) / 16.4f;
 
 }
 

@@ -18,13 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "mpu6050.h"
-#include "attitude.h"
-#include "motor.h"
-#include "pid.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include "mpu6050.h"
+#include "attitude.h"
+#include "pid.h"
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -154,19 +155,17 @@ int main(void)
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_4);
 
-  HAL_Delay(500);  // ?��?�� ?��?�� ?��?��?�� ??�?
+  HAL_Delay(500);  // ?��?�� ?��?�� ?��?��?�� ??�????
 
-  printf("\r\n=== MPU6050 I2C TEST ===\r\n");
+  MPU6050_WriteReg(0x6B, 0x00); // ?��?�� ?��?��
 
-  printf("SCL=%d, SDA=%d\r\n",
-         HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10),
-         HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11));
+  HAL_Delay(2000);
+  MPU6050_WriteReg(0x1B, 0x00);  // 기존 ±250°/s
+  MPU6050_WriteReg(0x1C, 0x00);
 
-  MPU6050_WriteReg(0x6B, 0x00);
-  HAL_Delay(2000);               // 2초 동안 기다리기
   float gyro_bias = MPU6050_CalibrateGyroX();
+  printf("MAIN BIAS = %.2f\r\n", gyro_bias);
 
-  printf("Gyro X Bias = %.2f\r\n", gyro_bias);
   float angle = 0.0f;
   uint8_t angle_initialized = 0;
   uint32_t print_count = 0;
@@ -178,83 +177,93 @@ int main(void)
   while (1)
   {
 
-	  // 시작
-//	    if (imu_flag)
-//	    {
-//	        imu_flag = 0;
-//
-//	        uint8_t imu_buffer[14] = {0};
-//
-//
-//	        // MPU6050 데이터 14바이트 읽기
-//	        MPU6050_ReadBytes(0x3B, imu_buffer, 14);
-//
-//	        // 센서 RAW 데이터 추출
-//	        int16_t accel_x =
-//	            (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
-//
-//	        int16_t accel_y =
-//	            (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
-//
-//	        int16_t accel_z =
-//	            (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
-//
-//	        int16_t gyro_x =
-//	            (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
-//
-//	        // 각도 및 각속도 계산
-//	        float accel_angle =
-//	            Attitude_GetAccelAngle(accel_y, accel_z);
-//
-//	        float gyro_rate =
-//	            Attitude_GetGyroRate(gyro_x, gyro_bias);
-//
-//	        if (angle_initialized == 0)
-//	        {
-//	            angle = accel_angle;
-//	            angle_initialized = 1;
-//	        }
-//	        else
-//	        {
-//	            angle = Attitude_ComplementaryFilter(
-//	                angle,
-//	                gyro_rate,
-//	                accel_angle,
-//	                0.01f
-//	            );
-//
-//	            float p_control = PID_P(TARGET_ANGLE, angle, 50.0f);
-//	            float d_control = PID_D(gyro_rate, 5.0f);
-//
-//	            float pd_output = p_control + d_control;
-//
-//	            if (angle > 20.0f || angle < -20.0f)
-//	            {
-//	                Motor_Set(0, 0);
-//	            }
-//	            else
-//	            {
-//	            	if(pd_output > 0){
-//	            		pd_output += 1500;
-//	            		if(pd_output > 2879){
-//	            			pd_output = 2879;
-//	            		}
-//	            	} else if(pd_output < 0){
-//	            		pd_output -= 1500;
-//	            		if(pd_output < -2879){
-//	            			pd_output = -2879;
-//	            		}
-//	            	}
-//	                Motor_Set((int)pd_output, (int)pd_output);
-//	            }
-//
-//	        }
-//		    if (++print_count >= 10)
-//		    {
-//		        print_count = 0;
-//
-//		    }
-//	    }
+	  // ?��?��
+	    if (imu_flag)
+	    {
+	        imu_flag = 0;
+
+	        uint8_t imu_buffer[14] = {0};
+
+
+	        // MPU6050 ?��?��?�� 14바이?�� ?���???
+	        MPU6050_ReadBytes(0x3B, imu_buffer, 14);
+
+	        // ?��?�� RAW ?��?��?�� 추출
+	        int16_t accel_x =
+	            (int16_t)((imu_buffer[0] << 8) | imu_buffer[1]);
+
+	        int16_t accel_y =
+	            (int16_t)((imu_buffer[2] << 8) | imu_buffer[3]);
+
+	        int16_t accel_z =
+	            (int16_t)((imu_buffer[4] << 8) | imu_buffer[5]);
+
+	        int16_t gyro_x =
+	            (int16_t)((imu_buffer[8] << 8) | imu_buffer[9]);
+
+	        // 각도 �??? 각속?�� 계산
+	        float accel_angle =
+	            Attitude_GetAccelAngle(accel_y, accel_z);
+
+	        float gyro_rate =
+	            Attitude_GetGyroRate(gyro_x, gyro_bias);
+
+
+	        if (angle_initialized == 0)
+	        {
+	            angle = accel_angle;
+	            angle_initialized = 1;
+	        }
+	        else
+	        {
+	            angle = Attitude_ComplementaryFilter(
+	                angle,
+	                gyro_rate,
+	                accel_angle,
+					0.005f
+	            );
+
+	            float p_control = PID_P(TARGET_ANGLE, angle, 96.0f);
+	            float d_control = PID_D(gyro_rate, 0.48f * 131.0f);
+
+	            float pd_output = p_control + d_control;
+
+
+	            if (angle > 30.0f || angle < -20.0f)
+	            {
+	                Motor_Set(0, 0);
+	            }
+	            else
+	            {
+	            	if(pd_output > 0){
+	            		pd_output += 1300;
+	            		if(pd_output > 2600){
+	            			pd_output = 2600;
+	            		}
+	            	} else if(pd_output < 0){
+	            		pd_output -= 1300;
+	            		if(pd_output < -2600){
+	            			pd_output = -2600;
+	            		}
+	            	}
+	            	if (++print_count >= 20)
+	            	{
+	            	    printf("ACC: %.2f | GYRO: %.2f | ANGLE: %.2f | P: %.2f | D: %.2f | PWM: %.0f\r\n",
+	            	           accel_angle,
+	            	           gyro_rate,
+	            	           angle,
+	            	           p_control,
+	            	           d_control,
+	            	           pd_output);
+
+	            	    print_count = 0;
+	            	}
+	                Motor_Set((int)pd_output, (int)pd_output);
+	            }
+
+	        }
+
+	    }
 	    // 종료
 
     /* USER CODE END WHILE */
@@ -422,7 +431,7 @@ static void MX_TIM6_Init(void)
   htim6.Instance = TIM6;
   htim6.Init.Prescaler = 7199;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 99;
+  htim6.Init.Period = 49;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {

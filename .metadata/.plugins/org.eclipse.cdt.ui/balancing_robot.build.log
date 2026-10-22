@@ -1,18 +1,7 @@
-00:59:00 **** Incremental Build of configuration Debug for project balancing_robot ****
+03:58:20 **** Incremental Build of configuration Debug for project balancing_robot ****
 make -j12 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xE -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
 ../Core/Src/main.c: In function 'main':
-../Core/Src/main.c:159:3: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
-  159 |   printf("\r\n=== MPU6050 I2C TEST ===\r\n");
-      |   ^~~~~~
-../Core/Src/main.c:25:1: note: include '<stdio.h>' or provide a declaration of 'printf'
-   24 | #include "pid.h"
-  +++ |+#include <stdio.h>
-   25 | /* Private includes ----------------------------------------------------------*/
-../Core/Src/main.c:159:3: warning: incompatible implicit declaration of built-in function 'printf' [-Wbuiltin-declaration-mismatch]
-  159 |   printf("\r\n=== MPU6050 I2C TEST ===\r\n");
-      |   ^~~~~~
-../Core/Src/main.c:159:3: note: include '<stdio.h>' or provide a declaration of 'printf'
 ../Core/Src/main.c:192:25: warning: unused variable 'accel_x' [-Wunused-variable]
   192 |                 int16_t accel_x =
       |                         ^~~~~~~
@@ -22,14 +11,14 @@ Finished building target: balancing_robot.elf
 arm-none-eabi-size  balancing_robot.elf 
 arm-none-eabi-objdump -h -S balancing_robot.elf  > "balancing_robot.list"
    text	   data	    bss	    dec	    hex	filename
-  32024	    468	   2292	  34784	   87e0	balancing_robot.elf
+  32112	    468	   2292	  34872	   8838	balancing_robot.elf
 arm-none-eabi-objcopy  -O ihex balancing_robot.elf  "balancing_robot.hex"
 Finished building: default.size.stdout
  
 Finished building: balancing_robot.hex
+ 
 Finished building: balancing_robot.list
  
- 
 
-00:59:01 Build Finished. 0 errors, 3 warnings. (took 718ms)
+03:58:21 Build Finished. 0 errors, 1 warnings. (took 714ms)
 
